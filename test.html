@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<script src="src/jquery-3.0.0.min.js"></script>
+<script type="text/javascript" src="src/jcanvas.min.js"></script>
+<!-- the canvas plugin -->
+<!-- the main BART plugin -->
+<body>
+<canvas id="canvas" width="500" height="500">
+    你的浏览器还不支持canvas
+</canvas>
+
+</body>
+
+<script>
+//    var canvas = document.getElementById("canvas");
+//    var context = canvas.getContext("2d");
+////    context.beginPath();
+////    //设置是个顶点的坐标，根据顶点制定路径
+////   for (var i = 0; i < 5; i++) {
+////        context.lineTo(Math.cos((18+i*72)/180*Math.PI)*200+200,
+////            -Math.sin((18+i*72)/180*Math.PI)*200+200);
+////        context.lineTo(Math.cos((54+i*72)/180*Math.PI)*80+200,
+////            -Math.sin((54+i*72)/180*Math.PI)*80+200);
+////   }
+////
+////    context.closePath();
+////    //设置边框样式以及填充颜色
+////    context.lineWidth="3";
+////    context.fillStyle = "#F6F152";
+////    context.strokeStyle = "#F5270B";
+////    context.fill();
+////    context.stroke();
+//
+//    context.beginPath();
+//    context.moveTo(100,100);
+//    context.lineTo(114,88);
+//    context.lineTo(120,111);
+//    context.lineTo(126,105);
+//    context.lineTo(126,105);
+//    context.lineTo(133,126);
+//    context.lineTo(138,121);
+//    context.lineTo(136,139);
+//    context.lineTo(132,129);
+//    context.lineTo(127,133);
+//    context.lineTo(120,118);
+//    context.lineTo(112,125);
+//    context.lineTo(100,100);
+//    context.fillStyle = "#FFFFFF";
+//    context.lineWidth = 1;
+//    context.strokeStyle = "#FFFFFF";
+//    //绘制
+//    context.stroke();
+
+
+    $('canvas').drawLine({
+        strokeStyle: '#000',
+        strokeWidth: 1,
+        x1: 100, y1: 100,
+        x2: 114, y2: 88,
+        x3: 120, y3: 111,
+        x4: 126, y4: 105,
+        x5: 133, y5: 126,
+        x6: 138, y6: 121,
+        x7: 136, y7: 139,
+        x8: 132, y8: 129,
+        x9: 127, y9: 133,
+        x10: 120, y10: 118,
+        x11: 112, y11: 125,
+        x12: 100, y12: 100
+    });
+
+</script>
+</html>

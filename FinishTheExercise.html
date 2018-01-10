@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Title</title>
+    <link rel="stylesheet" href="src/reset.css">
+    <link rel="stylesheet" href="src/style.css">
+    <script src="src/jquery-3.0.0.min.js"></script>
+</head>
+
+<style type="text/css">
+
+  #button0{
+      background: gray;color: white; font-size: 0.5rem; padding: 3% 3% 3% 3%;display: inline-table;
+  }
+
+  #button1{
+      background: gray;color: white; font-size: 0.5rem; padding: 3% 5% 3% 3%; display: inline-table; margin-left: 3rem;
+  }
+
+</style>
+<body style="background: white">
+        <div style="display: -webkit-flex; /* Safari */
+  display: flex;justify-content:center;flex-direction:column;align-items:center">
+            <h1  style="font-size: 1rem;margin-top: 10%" >恭喜您，完成练习！</h1>
+            <img style="margin-top: 50%" src="face.png"  height="60%" width="60%"/>
+
+            <div style="display: -webkit-flex; /* Safari */  display: flex;justify-content:center; justify-content:center; margin-top: 20%">
+                <div id="button0">重看指导</div>
+                <div id="button1"> 正式测试</div>
+            </div>
+
+        </div>
+</body>
+
+<script>
+
+        $("#button0").click(function(){
+            window.android.toMainActivity(getUrlParam("UserId"));
+        });
+
+        $("#button1").click(function(){
+            location.href="red.html?userId="+getUrlParam("UserId");
+        });
+
+        //方法一：
+        //获取url中的参数
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+            if (r != null) return unescape(r[2]); return null; //返回参数值
+        }
+
+</script>
+
+</html>

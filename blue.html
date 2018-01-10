@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+  
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+
+	<title>oBART: Example 1</title>
+		<!--<meta name="viewport"   charset="utf-8"  content="width=device-width,minimum-scale=1.0, maximum-scale=2.0" />-->
+		<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- these files are required for the BART to work    -->
+	<script type="text/javascript" src="src/jquery-3.0.0.min.js"></script>	<!-- basic javascript library for dom manipulation -->
+	<script type="text/javascript" src="src/jcanvas.min.js"></script>      	<!-- the canvas plugin -->
+	<script type="text/javascript" src="src/jquery.bart.js"></script>              <!-- the main BART plugin -->
+	<link rel="stylesheet" type="text/css" href="src/jquery.bart.css" />        <!-- additional canvasstyles for to make the BART look fancy -->
+
+	<!-- additional scripts to run the demo on this page -->
+	<script type="text/javascript">
+	//<![CDATA[
+
+		// initialize the BART after the page has loaded
+		$(document).ready(function() {
+		var whant=document.documentElement.clientWidth-20;
+			// create a BART with default values using 10 balloons
+			$("#bart").bart({ b: 5,                    // create 5 balloons
+                o: { color: 'blue',  popprob: 10,// color of balloons
+                },s: {
+                   // showpopprob:true,
+                    txt_cashin: '卖出气球',                     // text on 'Cash in' button
+                    txt_inflate: '充气',                  // text on 'Inflate' button
+                    txt_next:    '下一个气球',                     // text on 'Next' button
+                    txt_balloon_number: '气球编号: ',          // text for balloon number
+                    txt_number_of_pumps: '充气次数: ',        // text for number of pumps
+                    txt_current_earned: '当前赚取: ',          // text for current earnings
+                    txt_total_earned: '总收入: ',              // text for total earnings
+                    onend:  myend
+                }
+            });
+		});
+	
+	//]]>
+
+	//结束后调用
+    var myend = function(totalrevenue) {
+        //alert('You achieved ' + points + ' points.');
+
+		var frmids_pumps= $("input:hidden[name='bartdat']").val();
+    //    alert(frmids_pumps.toString());//id:充气次数: 是不是炸了: 不知道
+		var  id=[];//id数组
+        var  inflationfrequency=[];//充气次数
+        var  isexploded=[];//是不是炸了
+        var  issell=[];//是不是卖出
+		var  eachincome=[];//每次收益
+
+        var data_array=frmids_pumps.split(';');
+
+		for (var i=0;i<data_array.length-1;i++){
+		    var array=data_array[i].split(':');
+            id[i]=array[0];
+            inflationfrequency[i]=array[1];
+            isexploded[i]=array[2];
+            //eachincome[i]=array[2]*0.05;
+            if(isexploded[i]==0){
+                eachincome[i]=array[1]*0.05;
+            }else{
+                eachincome[i]=0;
+            }
+		}
+
+		var exploded =0;//爆炸次数
+		var sell=0;	//充气次数
+		//取绝对值
+        for (var j=0;j<isexploded.length;j++){
+            issell[j]=Math.abs(isexploded[j]-1);
+			if  (isexploded[j]==0){
+                sell++;
+			}else{
+                exploded++;
+			}
+		}
+		
+        cumulative_revenue[cumulative_revenue.length]=totalrevenue;
+       /* alert(cumulative_revenue.toString());
+        alert(explosione_random_value.toString());//每次爆炸次数
+        alert(eachincome.toString());//每次爆炸次数
+
+*/
+
+        /*$.ajax({
+            type: "post",
+            async: false,
+            url: "http://10.0.0.8:8080/company/addGameData.do",
+            dataType: "jsonp",
+            jsonp: "callback",//传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(一般默认为:callback)
+			data:{
+                gameDataUserId:"2", //用户id
+                gameSerials: id.toString(), //气球序号
+                gameExplodes:explosione_random_value.toString(), //设定第几次爆炸
+                gameInflations:inflationfrequency.toString(),          //充气次数
+                gameExplodeStates:isexploded.toString(),			//是否爆炸
+                gameInflationStates:issell.toString(),		//是否卖出
+                gameThisEarninges:eachincome.toString(),			//每次收益
+                gameAddEarninges:cumulative_revenue.toString(),	//全部收益
+
+                gameDataInflation:sell,
+                gameDataBlast:exploded, //总爆炸次数
+                gameDataPoints:cumulative_revenue[cumulative_revenue.length-1].toString() ,    //achincome.toString(),
+                gameDataThisEarnings:cumulative_revenue[cumulative_revenue.length-1].toString()     //achincome.toString(),
+            },
+
+            jsonpCallback:"?",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名，也可以写"?"，jQuery会自动为你处理数据
+
+            success: function(data){
+                alert('成功');
+            },
+            error: function(){
+                alert('fail');
+            }
+        });*/
+
+        function getQueryString(name) {
+            var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) {
+                return unescape(r[2]);
+            }
+            return null;
+        }
+        location.href="FinishTheExercise.html?userId=2";
+        $.post("addGameData.do",
+            {
+                gameDataUserId:getQueryString("userId"), //用户id
+                gameSerials: id.toString(), //气球序号
+                gameExplodes:explosione_random_value.toString(), //设定第几次爆炸
+                gameInflations:inflationfrequency.toString(),          //充气次数
+                gameExplodeStates:isexploded.toString(),			//是否爆炸
+        		gameInflationStates:issell.toString(),		//是否卖出
+				gameThisEarninges:eachincome.toString(),			//每次收益
+				gameAddEarninges:cumulative_revenue.toString(),	//全部收益
+                gameDataInflation:sell,
+                gameDataBlast:exploded, //总爆炸次数
+                gameDataPoints:cumulative_revenue[cumulative_revenue.length-1].toString() ,    //achincome.toString(),
+                gameDataThisEarnings:cumulative_revenue[cumulative_revenue.length-1].toString()     //achincome.toString(),
+                //gameDataAddEarnings:[cumulative_revenue.length-1].toString()
+                // game_inflation_state
+            },
+
+            function(ok){
+                if (ok =="ok" ){
+                    alert("测试成功");
+                    location.href="FinshTheExerCise.html?userId=2";
+				}else{
+                    alert("数据错误")
+				}
+            });
+    }
+
+	</script>
+	</head>
+	<body style="height: 100%;width: 100%;margin: 0;padding: 0;">
+
+	<h2 style="text-align:center; width: 600px;margin: auto; text-align: center;;margin-top: 100px">Online Balloon Analogue Risk Task (oBART)</h2>
+	<h3 style="text-align:center; width: 600px;">Example 1</h3>
+
+	<!-- load BART here -->
+	<div id="bart" style="margin: auto; text-align: center; width:100%">
+
+
+	</div>
+        
+	<!--<p style="text-align:center;">For more information see <a href="http://timo.gnambs.at/">http://timo.gnambs.at</a>.</p>-->
+
+	<br /><br/>
+<!--
+	<h2>Instructions</h2>
+	
+	<ol>
+		<li>Load all required files for the BART in the head of the page:
+<pre><code>
+&lt;script type="text/javascript" src="src/jquery-3.0.0.min.js"&gt;&lt;/script&gt;	&lt;!&#45;&#45; basic javascript library for dom manipulation &#45;&#45;&gt;
+&lt;script type="text/javascript" src="src/jcanvas.min.js"&gt;&lt;/script&gt;      	&lt;!&#45;&#45; the canvas plugin &#45;&#45;&gt;
+&lt;script type="text/javascript" src="src/jquery.bart.js"&gt;&lt;/script&gt;       &lt;!&#45;&#45; the main BART plugin &#45;&#45;&gt;
+&lt;link rel="stylesheet" type="text/css" href="src/jquery.bart.css" /&gt;    &lt;!&#45;&#45; additional styles for to make the BART look fancy &#45;&#45;&gt;
+</pre></code>
+		</li>
+		<li>Create an element in the body of the page with a unique <code>id</code>-attribute (here: "bart"):
+<pre><code>&lt;div id="bart"&gt;&lt;/div&gt;</pre></code>
+		</li>
+		<li>Create a script section in the head of the page:
+<pre><code>
+&lt;script type="text/javascript"&gt;
+&lt;/script&gt;
+</pre></code>
+		</li>
+		<li>Initialize the BART script after the page has loaded:
+<pre><code>
+&lt;script type="text/javascript"&gt;
+	$(document).ready(function() {   // initialize the BART after the page has loaded
+	});
+&lt;/script&gt;
+</pre></code>
+		</li>
+		<li>Define the BART (e.g., number and color of balloons) using the <code>id</code> defined in step 2 (see head of <code>src/jquery.bart.js</code> for configuration options):
+<pre><code>
+&lt;script type="text/javascript"&gt;
+	$(document).ready(function() {   // initialize the BART after the page has loaded
+		$("#bart").bart( 10 );   // create a BART with default values using 10 balloons
+	});
+&lt;/script&gt;
+</pre></code>
+		If only a single number is passed to the <code>bart()</code>-function, the number indicates the number of balloons.
+		</li>
+	</ol>
+-->
+
+       
+	</body>
+
+</html>
