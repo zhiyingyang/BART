@@ -113,16 +113,17 @@
     explosione_random_value=[];
     //每次累计收益
     cumulative_revenue=[];
-
+    //裂缝放大倍数
+    var scalesize=1.5;
     $.fn.bart = function( method ) {
 
         // default options
         var opts = {
             balloon: {                       // default settings for a balloon
-                earnings:        0.05,       // potential earnings for each pump
+                earnings:        10,       // potential earnings for each pump
                 popprob:         128,        // probability of popping (as 1 out of X)
                 radius:          48,         // balloon size
-                increment:       0.01,       // increment size of balloon at each pump
+                increment:       0.1,       // increment size of balloon at each pump
                 color:           '#DA110D',  // color of balloon
                 stroke_style:    '#000000',  // color of balloon stroke
                 stroke_width:    3,          // width of balloon stroke
@@ -223,6 +224,9 @@
 
         for(var i=0;i<bs.length;i++){
             explosione_random_value[i]=Math.ceil(Math.random()*10);
+            if (  explosione_random_value[i]==0){
+                explosione_random_value[i]=1;
+            }
         }
         
         /****************************/
@@ -355,7 +359,7 @@
             this.pumps = this.pumps + 1;
         
             // calculate current earnings
-            this.earned = (new Number(this.pumps * this.earnings)).toFixed(2);
+            this.earned = (new Number(this.pumps * this.earnings)).toFixed(0);
             
             // add time stamp of pump
             this.time.push($.now());
@@ -368,7 +372,6 @@
                     (new Audio(opts.sndpath + 'inflate.wav')).play();
                 }
             }
-            
             // on inflate hook
             this.oninflate();
             
@@ -386,119 +389,125 @@
             canvas.removeLayerGroup('balloon').drawLayers();
             // center of canvas
 
-            // var centerX = (canvas.width() - 200) / 2;
-            // var centerY = canvas.height() / 2 - (this.radius+this.radius * this.height_factor)/4;
-            //
-            // // degree of curving
-            // var handleLength = (4 * (Math.sqrt(2) - 1))/3 * this.radius;
-            //
-            // // bottom Y of balloon
-            // var balloonBottomY = centerY + this.radius + (this.radius * this.height_factor);
-            //
-            // // remove existing balloon
-            // canvas.removeLayerGroup('balloon').drawLayers();
-            //
-            //
-            // // draw tie as triangle
-            // canvas.drawPolygon({ strokeStyle: this.stroke_style,
-            //     strokeWidth: this.stroke_width,
-            //     fillStyle: this.color,
-            //     x: centerX,
-            //     y: balloonBottomY + (this.tie_width / 2),
-            //     radius: this.tie_width,
-            //     sides: 3,
-            //     layer: true,
-            //     name: 'tie',
-            //     groups: ['balloon'] });
-            //
-            // // create color gradient for balloon
-            // var grad = canvas.createGradient({ x1: centerX + (this.radius/this.gradient_radius),
-            //     y1: centerY - (this.radius/this.gradient_radius),
-            //     r1: this.gradient_radius,
-            //     r2: this.radius + (this.radius * this.height_factor),
-            //     x2: centerX,
-            //     y2: centerY,
-            //     c1: this.gradient_color,
-            //     c2: this.color,
-            //     s2: this.gradient_factor });
-            //
-            // // draw balloon
-            // canvas.drawBezier({ strokeStyle: this.stroke_style,
-            //     strokeWidth: this.stroke_width,
-            //     fillStyle: grad,
-            //     x1:  centerX - this.radius,  // start of top left curve
-            //     y1:  centerY,
-            //     cx1: centerX - this.radius,  // top left curving
-            //     cy1: centerY - handleLength - (this.radius * this.width_factor),
-            //     cx2: centerX - handleLength,
-            //     cy2: centerY - this.radius,
-            //     x2:  centerX,                // end of top left curve
-            //     y2:  centerY - this.radius,
-            //     cx3: centerX + handleLength + (this.radius * this.width_factor), // top right curving
-            //     cy3: centerY - this.radius,
-            //     cx4: centerX + this.radius,
-            //     cy4: centerY - handleLength,
-            //     x3:  centerX + this.radius,  // end of top right curve
-            //     y3:  centerY,
-            //     cx5: centerX + this.radius,  // bottom right curving
-            //     cy5: centerY + handleLength,
-            //     cx6: centerX + handleLength,
-            //     cy6: balloonBottomY,
-            //     x4:  centerX,                // end of bottom right curve
-            //     y4:  balloonBottomY,
-            //     cx7: centerX - handleLength, // bottom left curving
-            //     cy7: balloonBottomY,
-            //     cx8: centerX - this.radius,
-            //     cy8: centerY + handleLength,
-            //     x5:  centerX - this.radius,  // end of bottom left curve
-            //     y5:  centerY,
-            //     layer: true,
-            //     name: 'bubble',
-            //     groups: ['balloon'] });
-            //
-            // canvas.drawLine({
-            //     strokeStyle: '#000',
-            //     strokeWidth: 1,
-            //     x1: 100, y1: 100,
-            //     x2: 114, y2: 88,
-            //     x3: 120, y3: 111,
-            //     x4: 126, y4: 105,
-            //     x5: 133, y5: 126,
-            //     x6: 138, y6: 121,
-            //     x7: 136, y7: 139,
-            //     x8: 132, y8: 129,
-            //     x9: 127, y9: 133,
-            //     x10: 120, y10: 118,
-            //     x11: 112, y11: 125,
-            //     x12: 100, y12: 100,
-            //     layer: true,
-            //     name: 'bubble1',
-            //     groups: ['balloon']
-            // });
+            var centerX = (canvas.width() - 200) / 2;
+            var centerY = canvas.height() / 2 - (this.radius+this.radius * this.height_factor)/4;
 
-            // var mycanvas = document.querySelector("canvas");
-            // var context = mycanvas.getContext("2d");
-            // context.beginPath();
-            // context.moveTo(100,100);
-            // context.lineTo(114,88);
-            // context.lineTo(120,111);
-            // context.lineTo(126,105);
-            // context.lineTo(126,105);
-            // context.lineTo(133,126);
-            // context.lineTo(138,121);
-            // context.lineTo(136,139);
-            // context.lineTo(132,129);
-            // context.lineTo(127,133);
-            // context.lineTo(120,118);
-            // context.lineTo(112,125);
-            // context.lineTo(100,100);
-            // context.fillStyle = "#000000";
-            // context.lineWidth = 1;
-            // context.strokeStyle = "#000000";
-            // //绘制
-            // context.stroke();
+            // degree of curving
+            var handleLength = (4 * (Math.sqrt(2) - 1))/3 * this.radius;
+
+            // bottom Y of balloon
+            var balloonBottomY = centerY + this.radius + (this.radius * this.height_factor);
+
+            // remove existing balloon
+            canvas.removeLayerGroup('balloon').drawLayers();
 
 
+            // draw tie as triangle
+            canvas.drawPolygon({ strokeStyle: this.stroke_style,
+                strokeWidth: this.stroke_width,
+                fillStyle: this.color,
+                x: centerX,
+                y: balloonBottomY + (this.tie_width / 2),
+                radius: this.tie_width,
+                sides: 3,
+                layer: true,
+                name: 'tie',
+                groups: ['balloon'] });
+
+            // create color gradient for balloon
+            var grad = canvas.createGradient({ x1: centerX + (this.radius/this.gradient_radius),
+                y1: centerY - (this.radius/this.gradient_radius),
+                r1: this.gradient_radius,
+                r2: this.radius + (this.radius * this.height_factor),
+                x2: centerX,
+                y2: centerY,
+                c1: this.gradient_color,
+                c2: this.color,
+                s2: this.gradient_factor });
+
+            // draw balloon
+            canvas.drawBezier({ strokeStyle: this.stroke_style,
+                strokeWidth: this.stroke_width,
+                fillStyle: grad,
+                x1:  centerX - this.radius,  // start of top left curve
+                y1:  centerY,
+                cx1: centerX - this.radius,  // top left curving
+                cy1: centerY - handleLength - (this.radius * this.width_factor),
+                cx2: centerX - handleLength,
+                cy2: centerY - this.radius,
+                x2:  centerX,                // end of top left curve
+                y2:  centerY - this.radius,
+                cx3: centerX + handleLength + (this.radius * this.width_factor), // top right curving
+                cy3: centerY - this.radius,
+                cx4: centerX + this.radius,
+                cy4: centerY - handleLength,
+                x3:  centerX + this.radius,  // end of top right curve
+                y3:  centerY,
+                cx5: centerX + this.radius,  // bottom right curving
+                cy5: centerY + handleLength,
+                cx6: centerX + handleLength,
+                cy6: balloonBottomY,
+                x4:  centerX,                // end of bottom right curve
+                y4:  balloonBottomY,
+                cx7: centerX - handleLength, // bottom left curving
+                cy7: balloonBottomY,
+                cx8: centerX - this.radius,
+                cy8: centerY + handleLength,
+                x5:  centerX - this.radius,  // end of bottom left curve
+                y5:  centerY,
+                layer: true,
+                name: 'bubble',
+                groups: ['balloon'] });
+//闪电  centerX - this.radius
+//             canvas.drawLine({
+//                 strokeStyle: '#000',
+//                 fillStyle: '#fff',
+//                 strokeWidth: 1,
+//                 x1: 100, y1: 100,
+//                 x2: 114, y2: 88,
+//                 x3: 120, y3: 111,
+//                 x4: 126, y4: 105,
+//                 x5: 133, y5: 126,
+//                 x6: 138, y6: 121,
+//                 x7: 136, y7: 139,
+//                 x8: 132, y8: 129,
+//                 x9: 127, y9: 133,
+//                 x10: 120, y10: 118,
+//                 x11: 112, y11: 125,
+//                 x12: 100, y12: 100,
+//                 scaleX: 2,
+//                 scaleY: 2,
+//                 layer: true,
+//                 name: 'bubble1',
+//                 groups: ['balloon']
+//             });
+            canvas.drawLine({
+                // strokeStyle: '#000',
+                fillStyle: '#fff',
+                strokeWidth: 1,
+                x: centerX, y: centerY,
+                x1: -30, y1: -18,
+                x2: -12, y2: -34,
+                x3: -3, y3: -4,
+                x4: 6, y4: -10,
+                x5: 18, y5: 18,
+                x6: 22, y6: 12,
+                x7: 21, y7: 30,
+                x8: 16, y8: 21,
+                x9: 9, y9: 25,
+                x10: -2, y10: 6,
+                x11: -13, y11: 14,
+                x12: -30, y12: -18,
+                scale: scalesize,
+                //translateX:  0, translateY:0,
+                layer: true,
+                name: 'bubble1',
+                groups: ['balloon']
+            });
+
+        //    canvas.translateX(150);  //设置平移
+
+           // canvas.getContent().scale(2, 2);
             // on inflate hook 原来的爆炸
             this.oninflate();
             // sound
@@ -632,12 +641,11 @@
                     y:         50,
                     layer:     true,
                     name:      'balnum',
-                    fillStyle: '#000',
+                    fillStyle: '#000',fontSize: '0.8rem',
                     font:      '14pt Verdana, sans-serif',
                     text:      opts.txt_balloon_number + ' 1 / ' + bs.length
                 });
             }
-                
             // total earnings
             var bottomY = opts.h - 200;
             if(opts.showtotalearned == true) {
@@ -646,9 +654,9 @@
                     y:         bottomY,
                     layer:     true,
                     name:      'totearn',
-                    fillStyle: '#000',
+                    fillStyle: '#000',fontSize: '0.8rem',
                     font:      '14pt Verdana, sans-serif',
-                    text:      opts.txt_total_earned + '0.00'
+                    text:      opts.txt_total_earned + '0'
                 });
                 bottomY -= 50;
             }
@@ -660,7 +668,7 @@
                     y:         bottomY,
                     layer:     true,
                     name:      'pumpnum',
-                    fillStyle: '#000',
+                    fillStyle: '#000',fontSize: '0.8rem',
                     font:      '14pt Verdana, sans-serif',
                     text:      opts.txt_number_of_pumps + '0'
                 });
@@ -674,9 +682,9 @@
                     y:         bottomY,
                     layer:     true,
                     name:      'curearn',
-                    fillStyle: '#000',
+                    fillStyle: '#000',fontSize: '0.8rem',
                     font:      '14pt Verdana, sans-serif',
-                    text:      opts.txt_current_earned + '0.00'
+                    text:      opts.txt_current_earned + '0'
                 });
             }
 
@@ -687,7 +695,7 @@
                     y:         200,
                     layer:     true,
                     name:      'popprob',
-                    fillStyle: '#000',
+                    fillStyle: '#000',fontSize: '0.8rem',
                     font:      '14pt Verdana, sans-serif',
                     text:      opts.txt_prob_explosion + "\n\n" + 
                                (new Number(Math.round(10000/bs[0].popprob)/100)).toFixed(2) + '%'
@@ -725,48 +733,45 @@
                     // check for explosion
                     bal.popseq.sort(randOrder);
 
-
-                    if(bal.popseq.shift() == 1) {
+                   // if(bal.popseq.shift() == 1) {
+                    if( explosione_random_value[balcnt] ==  bal.pumps) {
 
                         // explode balloon
-
                         bal.explode(canvas);
-
                         // show/hide buttons
                         butInflate.hide();
                         butCashin.hide();
                         if(balcnt+1 < bs.length) butNext.show();
                         else opts.onend(opts.earned);
-
                     } else {
-
                         // inflate balloon
                         bal.radius = bal.radius * (1 + bal.increment);
                         bal.tie_width = bal.tie_width * (1 + bal.increment);
-                        bal.inflate(canvas);    
-
+                        scalesize=scalesize+bal.increment*2.5;
+                        bal.inflate(canvas);
                     }
-                        
                     // update counts
                     if(opts.showpumpcount) {
                         canvas.setLayer('pumpnum', { text: opts.txt_number_of_pumps + bal.pumps });
                     }
                     if(opts.showcurrentearned) {
                         canvas.setLayer('curearn', { text: opts.txt_current_earned + 
-                                                            (new Number(bal.earned)).toFixed(2) });
+                                                            (new Number(bal.earned)).toFixed(0) });
                     }
                     if(opts.showpopprob) {
-                        canvas.setLayer('popprob', { text: opts.txt_prob_explosion + "\n\n" + 
+                        canvas.setLayer('popprob', { text: opts.txt_prob_explosion + "\n\n" +
                                                           (new Number(Math.round(10000/bal.popseq.length)/100)).toFixed(2) + '%' });
                     }
+
                     if(opts.showpumpsused) {
                         canvas.setLayer('pumuse', { text: opts.txt_pumps_used + "\n\n" + 
                                                           (Math.round((bal.popprob-bal.popseq.length)/bal.popprob*100)) + '%' });
                     }
+
                     if(opts.showpumpcount | opts.showcurrentearned | opts.showpopprob | opts.showpumpsused) {
-                       // canvas.drawLayers();
+                       canvas.drawLayers();
                     }
-                
+
                 });
                 
             // next in button
@@ -789,13 +794,13 @@
                 balcnt++;
                 bal = new balloon( bs[balcnt] );
                 bal.inflate(canvas);
-                        
+
                 // update counts
                 if(opts.showpumpcount) {
                     canvas.setLayer('pumpnum', { text: opts.txt_number_of_pumps + '0' });
                 }
                 if(opts.showcurrentearned) {
-                    canvas.setLayer('curearn', { text: opts.txt_current_earned + '0.00' });
+                    canvas.setLayer('curearn', { text: opts.txt_current_earned + '0' });
                 }
                 if(opts.showballooncount) {
                     canvas.setLayer('balnum', { text: opts.txt_balloon_number + 
@@ -811,7 +816,7 @@
                 if(opts.showpumpcount | opts.showcurrentearned | opts.showballooncount | opts.showpopprob | opts.showpumpsused) {
                     canvas.drawLayers();
                 }
-                            
+                scalesize=1.5;
                 // show/hide buttons
                 butInflate.show();
                 butCashin.show();
@@ -835,7 +840,7 @@
                 .on('click.bart', function(e) {
                        
                     // update counts
-                    opts.earned = (opts.earned*1 + bal.earned*1).toFixed(2);
+                    opts.earned = (opts.earned*1 + bal.earned*1).toFixed(0);
                     if(opts.showtotalearned) {
                         canvas.setLayer('totearn', { text: opts.txt_total_earned + opts.earned }).drawLayers();
                     }
